@@ -7,43 +7,31 @@ root.geometry('500x500')
 
 totalLevel = 0
 
-def drawRoot(node, frame, xCenter, yCenter):
-    # Define the circle's diameter and canvas size
-
-
-    circle_diameter = 100
-    # Create the canvas with the size matching the circle's diameter
+def drawRoot(node, frame, parentNodeWidth, parentNodeHeight):
+    circle_diameter = 60
     canvas = ctk.CTkCanvas(frame, width=circle_diameter, height=circle_diameter, bg="white", highlightthickness=1)
-    canvas.place(x=xCenter,y=yCenter+100)
+    canvas.place(x=parentNodeWidth,y=parentNodeHeight)
     
-
-    # Calculate the coordinates for the bounding box of the circle
     x1 = 0
     y1 = 0
     x2 = circle_diameter
     y2 = circle_diameter
-
-    # Draw the circle (oval) on the canvas
     canvas.create_oval(x1, y1, x2, y2, outline="green", fill="green", width=2)
 
-    # Draw the text inside the circle, centered
+
     text_x = circle_diameter / 2
     text_y = circle_diameter / 2
-    canvas.create_text(text_x, text_y, text=node.data, fill="white", font=("Arial", 24))
+    canvas.create_text(text_x, text_y, text=node.data, fill="white", font=("Arial", 20))
 
-    # Create and place a label in the frame (optional)
-    # dataLabel = ctk.CTkLabel(frame, text=node.data, font=('default', 25, 'bold'), text_color='white', height=20, width=40)
-    # dataLabel.pack()
-    
     return
 
 
-def drawLeft(node,frame,xCenter, yCenter):
+def drawLeft(node,frame,parentNodeWidth, parentNodeHeight):
     
-    circle_diameter = 100
+    circle_diameter = 60
     
     canvas = ctk.CTkCanvas(frame, width=circle_diameter, height=circle_diameter, bg="white",highlightthickness=1)
-    canvas.place(x=xCenter-100,y=yCenter+100)
+    canvas.place(x=parentNodeWidth,y=parentNodeHeight)
 
     x1=0
     y1=0
@@ -55,17 +43,16 @@ def drawLeft(node,frame,xCenter, yCenter):
     text_x=circle_diameter/2
     text_y=circle_diameter/2
 
-    canvas.create_text(text_x,text_y, text=node.data,fill="white", font=("Arial", 24))
-    # dataLable = ctk.CTkLabel(frame, text=node.data, font=('default',25,'bold'), text_color='white',height=20,width=40)
-    # dataLable.pack()
+    canvas.create_text(text_x,text_y, text=node.data,fill="white", font=("Arial", 20))
+
     return
 
 
-def drawRight(node,frame,xCenter, yCenter):
-    circle_diameter = 100
+def drawRight(node,frame,parentNodeWidth, parentNodeHeight):
+    circle_diameter = 60
     
     canvas = ctk.CTkCanvas(frame, width=circle_diameter, height=circle_diameter, bg="white",highlightthickness=1)
-    canvas.place(x=xCenter+100,y=yCenter+100)
+    canvas.place(x=parentNodeWidth,y=parentNodeHeight)
 
     x1=0
     y1=0
@@ -77,9 +64,8 @@ def drawRight(node,frame,xCenter, yCenter):
     text_x=circle_diameter/2
     text_y=circle_diameter/2
 
-    canvas.create_text(text_x,text_y, text=node.data,fill="white", font=("Arial", 24))
-    # dataLable = ctk.CTkLabel(frame, text=node.data, font=('default',25,'bold'), text_color='white',height=20,width=40)
-    # dataLable.pack()
+    canvas.create_text(text_x,text_y, text=node.data,fill="white", font=("Arial", 20))
+
     return
 
 
@@ -117,26 +103,34 @@ class Tree:
         print("\nInserted Successfully ")
 
     
-    def preOrderTraversal(self,root,mainFrame,xCenter,yCenter):
+    def preOrderTraversal(self,root,mainFrame,rootNodeGap,parentNodeWidth,parentNodeHeight):
         if root is None:
             return
 
         else:
             if root.left!=None:
-                xCenter-=100
-                yCenter+=100
-                drawLeft(root.left,mainFrame,xCenter,yCenter)
+                leftChildNodeHeight = parentNodeHeight + 100
+                leftChildNodeWidth = parentNodeWidth - rootNodeGap
+                drawLeft(root.left,mainFrame,leftChildNodeWidth,leftChildNodeHeight)
+            
+            else:
+                leftChildNodeHeight = parentNodeHeight
+                leftChildNodeWidth = parentNodeWidth
+
 
                     
             if root.right!=None:
-                xCenter+=200
-                drawRight(root.right,mainFrame,xCenter,yCenter)
+                rightChildNodeHeight = parentNodeHeight + 100
+                rightChildNodeWidth = parentNodeWidth + rootNodeGap
+                drawRight(root.right,mainFrame,rightChildNodeWidth,rightChildNodeHeight)
             
-            print(root.data, end=' ')
-            xCenter-=200
-            self.preOrderTraversal(root.left,mainFrame,xCenter,yCenter)
-            xCenter+=200
-            self.preOrderTraversal(root.right,mainFrame,xCenter,yCenter)
+            else:
+                rightChildNodeHeight = parentNodeHeight+100
+                rightChildNodeWidth = parentNodeWidth
+            
+            rootNodeGap-=100
+            self.preOrderTraversal(root.left,mainFrame,rootNodeGap,parentNodeWidth=leftChildNodeWidth,parentNodeHeight=leftChildNodeHeight)
+            self.preOrderTraversal(root.right,mainFrame,rootNodeGap,parentNodeWidth=rightChildNodeWidth,parentNodeHeight=rightChildNodeHeight)
             
             
     def levelChecker(self,root):
@@ -162,23 +156,24 @@ class Tree:
             n = totalLevel
             H = int(math.log2(n+1))
             print("\nTotal Level: ",H)
+
+            rootNodeGap = H*100
+
             mainFrame = ctk.CTkFrame(master=root,fg_color='white')
             mainFrame.pack(expand=True, fill='both')
-            treeTitle = ctk.CTkLabel(master=mainFrame, text='Binary Search Tree',font=('default',25,'bold'), text_color='green')
+            treeTitle = ctk.CTkLabel(master=mainFrame, text='Binary Search Tree',font=('default',20,'bold'), text_color='green')
             treeTitle.pack(pady=(50))
 
             
 
-            xCenter = root.winfo_screenwidth()//1.4
-            yCenter = root.winfo_screenheight()//4
+            parentNodeWidth = int(root.winfo_screenwidth()//1.4)
+            parentNodeHeight = int(root.winfo_screenheight()//4)
 
-            
-         
+            print(f"Top Root node coordinates({parentNodeWidth,parentNodeHeight})")
+
             if MainNode!=None:
-                print("Drawing root")
-                drawRoot(currNode,mainFrame,xCenter,yCenter)
-
-                self.preOrderTraversal(currNode,mainFrame,xCenter,yCenter)         
+                drawRoot(currNode,mainFrame,parentNodeWidth,parentNodeHeight)
+                self.preOrderTraversal(currNode,mainFrame,rootNodeGap,parentNodeWidth,parentNodeHeight)         
                 root.mainloop()
 
 
@@ -192,17 +187,22 @@ menu ='''
 
 while True:
     print(menu)
-    ch = int(input("\nEnter Chocie: "))
-    if ch==1:
-        data = int(input("\nEnter Data: "))
-        n = Node(data)
-        tree.insert(n)
+    try:
+        ch = int(input("\nEnter Chocie: "))
 
-    elif ch==2:
-        tree.display()
-    
-    else:
-        print("\nInvalid choice !")
+        if ch==1:
+            data = int(input("\nEnter Data: "))
+            n = Node(data)
+            tree.insert(n)
+
+        elif ch==2:
+            tree.display()
+        
+        else:
+            print("\nInvalid choice !")
+
+    except ValueError: 
+        print("\nInvalid value !")
     
     print("")
     input()
