@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import math
 
+
 root = ctk.CTk()
 root.title('Binary Search Tree')
 root.geometry('500x500')
@@ -31,7 +32,7 @@ def drawLeft(node,frame,parentNodeWidth, parentNodeHeight):
     circle_diameter = 60
     
     canvas = ctk.CTkCanvas(frame, width=circle_diameter, height=circle_diameter, bg="white",highlightthickness=1)
-    canvas.place(x=parentNodeWidth,y=parentNodeHeight)
+    canvas.place(x=parentNodeWidth+30,y=parentNodeHeight)
 
     x1=0
     y1=0
@@ -50,15 +51,18 @@ def drawLeft(node,frame,parentNodeWidth, parentNodeHeight):
 
 def drawRight(node,frame,parentNodeWidth, parentNodeHeight):
     circle_diameter = 60
+
     
     canvas = ctk.CTkCanvas(frame, width=circle_diameter, height=circle_diameter, bg="white",highlightthickness=1)
-    canvas.place(x=parentNodeWidth,y=parentNodeHeight)
+    canvas.place(x=parentNodeWidth-30,y=parentNodeHeight)
+
 
     x1=0
     y1=0
     x2=circle_diameter
     y2=circle_diameter
 
+    
     canvas.create_oval(x1, y1, x2, y2, outline="green", fill="green", width=2)
 
     text_x=circle_diameter/2
@@ -91,6 +95,8 @@ class Tree:
                         currNode = currNode.left
                     else:
                         currNode.left = newNode
+                        print("")
+                        print(currNode.left.data,"Inserted Successfully ")
                         break
                 
                 else:
@@ -98,9 +104,11 @@ class Tree:
                         currNode = currNode.right
                     else:
                         currNode.right = newNode
+                        print("")
+                        print(currNode.right.data,"Inserted Successfully ")
                         break
         
-        print("\nInserted Successfully ")
+        
 
     
     def preOrderTraversal(self,root,mainFrame,rootNodeGap,parentNodeWidth,parentNodeHeight):
@@ -164,8 +172,6 @@ class Tree:
             treeTitle = ctk.CTkLabel(master=mainFrame, text='Binary Search Tree',font=('default',20,'bold'), text_color='green')
             treeTitle.pack(pady=(50))
 
-            
-
             parentNodeWidth = int(root.winfo_screenwidth()//1.4)
             parentNodeHeight = int(root.winfo_screenheight()//4)
 
@@ -194,7 +200,7 @@ while True:
             data = int(input("\nEnter Data: "))
             n = Node(data)
             tree.insert(n)
-
+    
         elif ch==2:
             tree.display()
         

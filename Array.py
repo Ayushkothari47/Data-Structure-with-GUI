@@ -1,57 +1,59 @@
 import customtkinter as ctk
 
 root = ctk.CTk()
-root.title('Array')
-root.geometry('1020x1080')
+root.title("Array")
+root.geometry('500x500')
 
+screenHeight = root.winfo_screenheight()
 screenWidth = root.winfo_screenwidth()
 
 arr = []
 
-def arrayInput():
+def insert():
+    global arr
+    
     try:
-        n = int(input("\nEnter Array Length: "))
-        if n>25 or n<=0:
-            print("\nArray size must be in range between 1-25")
-            input()
-            arrayInput()
+        val = valueInput.get()
+        arr.append(val)
     except ValueError:
         print("\nInvalid value !")
-        input()
-        arrayInput()
+        
     
+    print("Array: ",arr)
+
+    update()
+
+def clearDiagram():
+    for widget in digramFrame.winfo_children():
+        widget.destroy()
+
+def update():
+    clearDiagram()
     i=0
-    while i<n:
-        try:
-            val = int(input("\nEnter value: "))
-            arr.append(val)
-            i+=1
-        except ValueError:
-            print("\nInvalid value !")
-            input()
+    while i<len(arr):
+        indexFrame = ctk.CTkFrame(master=digramFrame, border_width=1, border_color='red', height=40, width=40,fg_color='red')
+        indexFrame.pack(anchor='center',side='left',padx=(2,2))
+        indexData = ctk.CTkLabel(master=indexFrame, text=arr[i],height=40, width=40 ,text_color='white',font=('default',18,'bold'))
+        indexData.pack(fill='both',expand=True, side='bottom')
 
-arrayInput()
+        indexData = ctk.CTkLabel(master=indexFrame, text=i,height=40, width=40 ,fg_color='white',text_color='blue',font=('default',18,'bold'))
+        indexData.pack(fill='both',expand=True)
 
+        i+=1 
 
 mainframe = ctk.CTkFrame(master=root,fg_color='white')
 mainframe.pack(expand='true',fill='both')
 
-arrayLable = ctk.CTkLabel(mainframe,text='AN ARRAY',text_color='red',font=('default',25,'bold'))
-arrayLable.place(x=screenWidth//2 - len(arr)*3, y=100) 
+digramFrame = ctk.CTkFrame(master=mainframe,fg_color='#e5e5e5',width=screenWidth,height=screenHeight*60//100)
+digramFrame.pack()
 
-subframe = ctk.CTkFrame(mainframe,fg_color='white',height=400,width=1000)
-subframe.pack(pady=(200,200))
+valueLable = ctk.CTkLabel(mainframe, text="Value: ",height=30,text_color='black',font=('default',18,'bold'))
+valueLable.pack(padx=(screenWidth*10//100,screenWidth*1//100),side='left')
 
-i=0
-while i<len(arr):
-    indexFrame = ctk.CTkFrame(master=subframe, border_width=1, border_color='red', height=40, width=40,fg_color='red')
-    indexFrame.pack(anchor='center',side='left',padx=(2,2))
-    indexData = ctk.CTkLabel(master=indexFrame, text=arr[i],height=40, width=40 ,text_color='white',font=('default',18,'bold'))
-    indexData.pack(fill='both',expand=True, side='bottom')
+valueInput = ctk.CTkEntry(mainframe,fg_color='black',text_color='white',font=('default',18,'bold'))
+valueInput.pack(side='left')
 
-    indexData = ctk.CTkLabel(master=indexFrame, text=i,height=40, width=40 ,fg_color='white',text_color='blue',font=('default',18,'bold'))
-    indexData.pack(fill='both',expand=True)
-
-    i+=1 
+insertBtn = ctk.CTkButton(mainframe,text='Insert',fg_color='purple',text_color='white',command=insert)
+insertBtn.pack(side='left')
 
 root.mainloop()
