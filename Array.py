@@ -93,10 +93,10 @@ inputFrame.pack(expand=True)
 valueInput = ctk.CTkEntry(inputFrame,fg_color='black',text_color='white',font=('default',15,),placeholder_text='Enter Value here ',placeholder_text_color='white',height=40,width=120)
 valueInput.pack(side="left", padx=10, pady=10)
 
-insertBtn = ctk.CTkButton(inputFrame,text='Insert',fg_color='green',text_color='white',command=insert)
+insertBtn = ctk.CTkButton(inputFrame,text='Insert',fg_color='green',hover_color='#228B22',text_color='white',command=insert)
 insertBtn.pack(side="left", padx=10, pady=10)
 
-deleteBtn = ctk.CTkButton(inputFrame,text='Delete',fg_color='red',text_color='white',command=delete)
+deleteBtn = ctk.CTkButton(inputFrame,text='Delete',fg_color='#D22B2B',hover_color='red',text_color='white',command=delete)
 deleteBtn.pack(side='left',padx=10, pady=10)
 
 update()

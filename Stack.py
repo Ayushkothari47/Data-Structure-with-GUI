@@ -95,10 +95,10 @@ inputFrame.pack(expand=True)
 valueInput = ctk.CTkEntry(inputFrame,fg_color='black',text_color='white',font=('default',15,),placeholder_text='Enter Value here ',placeholder_text_color='white',height=40,width=120)
 valueInput.pack(side="left", padx=10, pady=10)
 
-pushBtn = ctk.CTkButton(inputFrame,text='PUSH',fg_color='green',text_color='white',command=push)
+pushBtn = ctk.CTkButton(inputFrame,text='PUSH',fg_color='green',hover_color='#228B22',text_color='white',command=push)
 pushBtn.pack(side="left", padx=10, pady=10)
 
-popBtn = ctk.CTkButton(inputFrame,text='POP',fg_color='red',text_color='white',command=pop)
+popBtn = ctk.CTkButton(inputFrame,text='POP',fg_color='#D22B2B',hover_color='red',text_color='white',command=pop)
 popBtn.pack(side='left',padx=10, pady=10)
 
 update()
