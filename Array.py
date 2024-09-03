@@ -22,7 +22,7 @@ def insert():
     try:
         val = valueInput.get()
         if val.isnumeric():
-            if len(arr)>25:
+            if len(arr)>15:
                 error('ARRAY_TOO_BIG')
             else:
                 arr.append(val)
