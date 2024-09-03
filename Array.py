@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from tkinter import messagebox
 
 root = ctk.CTk()
 root.title("Array")
@@ -9,12 +10,22 @@ screenWidth = root.winfo_screenwidth()
 
 arr = []
 
+def error(errorName):
+    if errorName=='INVALID_INPUT':
+        messagebox.showinfo("Error","Invalid value type ")
+    
+
 def insert():
     global arr
-    
     try:
         val = valueInput.get()
-        arr.append(val)
+
+        if val.isnumeric():
+            arr.append(val)
+        
+        else:
+            error('INVALID_INPUT')
+
     except ValueError:
         print("\nInvalid value !")
         
@@ -32,7 +43,7 @@ def update():
     i=0
     while i<len(arr):
         indexFrame = ctk.CTkFrame(master=digramFrame, border_width=1, border_color='red', height=40, width=40,fg_color='red')
-        indexFrame.pack(anchor='center',side='left',padx=(2,2))
+        indexFrame.pack(anchor='center',side='left',padx=(2,2),pady=(50,50))
         indexData = ctk.CTkLabel(master=indexFrame, text=arr[i],height=40, width=40 ,text_color='white',font=('default',18,'bold'))
         indexData.pack(fill='both',expand=True, side='bottom')
 
@@ -44,7 +55,7 @@ def update():
 mainframe = ctk.CTkFrame(master=root,fg_color='white')
 mainframe.pack(expand='true',fill='both')
 
-digramFrame = ctk.CTkFrame(master=mainframe,fg_color='#e5e5e5',width=screenWidth,height=screenHeight*60//100)
+digramFrame = ctk.CTkFrame(master=mainframe,fg_color='white',width=screenWidth,height=screenHeight*60//100)
 digramFrame.pack()
 
 valueLable = ctk.CTkLabel(mainframe, text="Value: ",height=30,text_color='black',font=('default',18,'bold'))
