@@ -4,35 +4,58 @@ from tkinter import messagebox
 root = ctk.CTk()
 root.title("Array")
 root.geometry('500x500')
-
 screenHeight = root.winfo_screenheight()
 screenWidth = root.winfo_screenwidth()
-
 arr = []
 
 def error(errorName):
     if errorName=='INVALID_INPUT':
         messagebox.showinfo("Error","Invalid value type ")
-    
+    elif errorName=='VALUE_NOT_EXIST':
+        messagebox.showinfo("Error","Value not present in array")
+    elif errorName=='ARRAY_TOO_BIG':
+        messagebox.showinfo("Error","Array is too big")
 
+    
 def insert():
     global arr
     try:
         val = valueInput.get()
-
         if val.isnumeric():
-            arr.append(val)
-        
+            if len(arr)>25:
+                error('ARRAY_TOO_BIG')
+            else:
+                arr.append(val)
+                update()
         else:
             error('INVALID_INPUT')
-
     except ValueError:
-        print("\nInvalid value !")
-        
+        error('INVALID_INPUT')
     
-    print("Array: ",arr)
+    
 
-    update()
+def delete():
+    global arr
+    
+    try:
+        val = valueInput.get()
+        found = 0
+        if val.isnumeric():
+            for i in arr:
+               if i==val:
+                   arr.remove(i)
+                   found = 1
+                   break
+            
+            if found==0:
+                error('VALUE_NOT_EXIST')
+            else:
+                update()
+        else:
+            error('INVALID_INPUT')
+    except ValueError:
+        error('INVALID_INPUT')
+    
 
 def clearDiagram():
     for widget in digramFrame.winfo_children():
@@ -40,6 +63,10 @@ def clearDiagram():
 
 def update():
     clearDiagram()
+    if len(arr)==0:
+        text = ctk.CTkLabel(digramFrame,text="Array is Empty !",text_color='red',font=('default',18,'bold'))
+        text.pack(pady=(100,0))
+
     i=0
     while i<len(arr):
         indexFrame = ctk.CTkFrame(master=digramFrame, border_width=1, border_color='red', height=40, width=40,fg_color='red')
@@ -58,13 +85,20 @@ mainframe.pack(expand='true',fill='both')
 digramFrame = ctk.CTkFrame(master=mainframe,fg_color='white',width=screenWidth,height=screenHeight*60//100)
 digramFrame.pack()
 
-valueLable = ctk.CTkLabel(mainframe, text="Value: ",height=30,text_color='black',font=('default',18,'bold'))
-valueLable.pack(padx=(screenWidth*10//100,screenWidth*1//100),side='left')
+inputFrame = ctk.CTkFrame(mainframe,fg_color='white')
+inputFrame.pack(expand=True)
 
-valueInput = ctk.CTkEntry(mainframe,fg_color='black',text_color='white',font=('default',18,'bold'))
-valueInput.pack(side='left')
 
-insertBtn = ctk.CTkButton(mainframe,text='Insert',fg_color='purple',text_color='white',command=insert)
-insertBtn.pack(side='left')
+
+valueInput = ctk.CTkEntry(inputFrame,fg_color='black',text_color='white',font=('default',15,),placeholder_text='Enter Value here ',placeholder_text_color='white',height=40,width=120)
+valueInput.pack(side="left", padx=10, pady=10)
+
+insertBtn = ctk.CTkButton(inputFrame,text='Insert',fg_color='green',text_color='white',command=insert)
+insertBtn.pack(side="left", padx=10, pady=10)
+
+deleteBtn = ctk.CTkButton(inputFrame,text='Delete',fg_color='red',text_color='white',command=delete)
+deleteBtn.pack(side='left',padx=10, pady=10)
+
+update()
 
 root.mainloop()
